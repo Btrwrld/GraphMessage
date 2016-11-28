@@ -12,11 +12,14 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ce.datosi.GraphMessage.Herramientas.Codigo;
 import com.ce.datosi.GraphMessage.R;
+import com.ce.datosi.GraphMessage.Servicios.EnvioDatos;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -117,8 +120,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 }
             });
+
             //Servicios de localizacion
-       //apiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addConnectionCallbacks(this).addApi(LocationServices.API).build();
+       apiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addConnectionCallbacks(this).addApi(LocationServices.API).build();
 
 
     }
@@ -184,6 +188,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             Location lastLocation =
                     LocationServices.FusedLocationApi.getLastLocation(apiClient);
 
+
+            Codigo info = new Codigo();
+            info.setX(lastLocation.getLatitude());
+            info.setY(lastLocation.getLongitude());
+            info.setNombre("Erick");
+            EnvioDatos envio = new EnvioDatos(info);
+            envio.execute();
             updateUI(lastLocation);
         }
     }
@@ -207,7 +218,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 Location lastLocation =
                         LocationServices.FusedLocationApi.getLastLocation(apiClient);
 
-                updateUI(lastLocation);
+
+                Codigo info = new Codigo();
+                info.setX(lastLocation.getLatitude());
+                info.setY(lastLocation.getLongitude());
+                info.setNombre("Erick");
+                EnvioDatos envio = new EnvioDatos(info);
+                envio.execute();
+               updateUI(lastLocation);
 
             } else {
                 //Permiso denegado:
