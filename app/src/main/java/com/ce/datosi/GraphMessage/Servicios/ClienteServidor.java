@@ -21,14 +21,14 @@ import java.net.UnknownHostException;
  * Created by erick on 11/23/2016.
  */
 
-public class EnvioDatos extends AsyncTask<Void, Void, Void> {
+public class ClienteServidor extends AsyncTask<Void, Void, Void> {
 
     private static final int SERVERPORT = 4445;
-    private static final String SERVER_IP = "192.168.100.9";
+    private static final String SERVER_IP = "192.168.100.10";
 
     private Codigo info;
 
-    public EnvioDatos(Codigo info){
+    public ClienteServidor(Codigo info){
         this.info = info;
     }
 
@@ -61,29 +61,35 @@ public class EnvioDatos extends AsyncTask<Void, Void, Void> {
 
         BufferedReader input = null;
         String respuesta = null;
-        try {
-            input = new BufferedReader(new InputStreamReader(Comunicador.Serversocket.getInputStream()));
-            respuesta = input.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        Codigo info = gson.fromJson(respuesta, Codigo.class);
+        boolean bandera = true;
 
-        if(info.getGrafo() != null){
-            Comunicador.setGrafoUsuarios(info.getGrafo());
-        }
-        if(info.getIds() != null){
+        while (bandera ) {
             try {
-                Comunicador.setClientes(info.getIds());
-            } catch (InterruptedException e) {
+                input = new BufferedReader(new InputStreamReader(Comunicador.Serversocket.getInputStream()));
+                respuesta = input.readLine();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            if(respuesta != null) {
+                Codigo info = gson.fromJson(respuesta, Codigo.class);
+
+                if (info.getGrafo() != null) {
+                    Comunicador.setGrafoUsuarios(info.getGrafo());
+                    System.out.print("Paso el grafo");
+                }
+                if (info.getIds() != null) {
+                    try {
+                        Comunicador.setClientes(info.getIds());
+                        System.out.print("Paso la lista");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                bandera = false;
+            }
         }
-
-
-
-
         return null;
     }
 

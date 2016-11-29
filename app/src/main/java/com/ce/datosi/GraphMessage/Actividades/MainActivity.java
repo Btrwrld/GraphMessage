@@ -4,22 +4,19 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ce.datosi.GraphMessage.Herramientas.Codigo;
 import com.ce.datosi.GraphMessage.R;
-import com.ce.datosi.GraphMessage.Servicios.EnvioDatos;
+import com.ce.datosi.GraphMessage.Servicios.ClienteServidor;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -50,11 +47,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
     //Facebook
-    CallbackManager callbackManager;
-    LoginButton login;
-    ProfilePictureView profile;
-    TextView vistaNombre;
-    ImageButton continuar;
+    private CallbackManager callbackManager;
+    private LoginButton login;
+    private ProfilePictureView profile;
+    private TextView vistaNombre;
+    private ImageButton continuar;
+    private double lat,lon;
     private String nombre, profile_image;
 
     @Override
@@ -70,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         profile = (ProfilePictureView)findViewById(R.id.picture);
         vistaNombre = (TextView)findViewById(R.id.lblnombre) ;
         continuar = (ImageButton)findViewById(R.id.ibtnContinuar);
+        vistaNombre.setText(nombre);
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                             RequestData();
                             Profile profile = Profile.getCurrentProfile();
                             if (profile != null) {
-                                vistaNombre.setText(profile.getName());
+                                nombre = profile.getLastName();
                                 Log.e("full_name", nombre);
                                 profile_image = profile.getProfilePictureUri(400, 400).toString();
                                 Log.e("profile_image", profile_image);
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             });
 
             //Servicios de localizacion
-       apiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addConnectionCallbacks(this).addApi(LocationServices.API).build();
+        apiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, this).addConnectionCallbacks(this).addApi(LocationServices.API).build();
 
 
     }
@@ -190,10 +189,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
             Codigo info = new Codigo();
+            this.lat = lastLocation.getLatitude();
+            this.lon = lastLocation.getLongitude();
             info.setX(lastLocation.getLatitude());
             info.setY(lastLocation.getLongitude());
             info.setNombre("Erick");
-            EnvioDatos envio = new EnvioDatos(info);
+            info.setMAC("00:0a:95:9d:68:16.");
+            ClienteServidor envio = new ClienteServidor(info);
             envio.execute();
             updateUI(lastLocation);
         }
@@ -220,10 +222,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
                 Codigo info = new Codigo();
+                this.lat = lastLocation.getLatitude();
+                this.lon = lastLocation.getLongitude();
                 info.setX(lastLocation.getLatitude());
                 info.setY(lastLocation.getLongitude());
                 info.setNombre("Erick");
-                EnvioDatos envio = new EnvioDatos(info);
+                info.setMAC("00:0a:95:9d:68:16");
+                ClienteServidor envio = new ClienteServidor(info);
                 envio.execute();
                updateUI(lastLocation);
 
