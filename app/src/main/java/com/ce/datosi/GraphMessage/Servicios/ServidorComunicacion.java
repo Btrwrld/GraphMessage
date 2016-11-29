@@ -80,11 +80,6 @@ public class ServidorComunicacion implements Runnable {
                                 Comunicador.agregarACola(mensaje[0], porEnviar);
                             }
 		                }
-		                
-
-		                //Aqui va el grafo y la lista
-
-		                
 		                System.out.println("Llego info");
 
 	                }

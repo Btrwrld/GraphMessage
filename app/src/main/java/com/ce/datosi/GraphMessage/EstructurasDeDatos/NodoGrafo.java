@@ -1,8 +1,11 @@
 package com.ce.datosi.GraphMessage.EstructurasDeDatos;
 
+import com.fernandocejas.arrow.optional.Optional;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+
 
 public class NodoGrafo<T> {
 
@@ -32,21 +35,29 @@ public class NodoGrafo<T> {
     }
 
     public boolean removerArista(NodoGrafo<T> nodo) {
-        Optional<Arista<T>> optional = encontrarArista(nodo);
-        if (optional.isPresent()) {
-            return aristas.remove(optional.get());
+        if(encontrarArista(nodo) == null){
+            return false;
         }
-        return false;
+        Arista<T> optional = encontrarArista(nodo);
+        return aristas.remove(optional);
     }
 
     public boolean poseeArista(NodoGrafo<T> nodo) {
-        return encontrarArista(nodo).isPresent();
+        if(encontrarArista(nodo) == null){
+            return false;
+        }
+        return true;
     }
 
-    public Optional<Arista<T>> encontrarArista(NodoGrafo<T> nodo) {
-        return aristas.stream()
-                .filter(edge -> edge.estaEnMedio(this, nodo))
-                .findFirst();
+    public Arista<T> encontrarArista(NodoGrafo<T> nodo) {
+        Arista<T> arista = null;
+        for (Arista<T> a:
+             this.aristas) {
+            if (a.nodoObjetivo() == nodo) {
+                arista = a;
+            }
+        }
+        return arista;
     }
 
     public List<Arista<T>> aristas() {
