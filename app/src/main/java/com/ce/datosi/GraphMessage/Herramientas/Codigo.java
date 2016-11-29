@@ -1,14 +1,36 @@
 package com.ce.datosi.GraphMessage.Herramientas;
 
+import com.ce.datosi.GraphMessage.EstructurasDeDatos.Grafo;
+import com.ce.datosi.GraphMessage.Usuario.ID;
+
+import java.util.LinkedList;
+
 public class Codigo {
 	
-	private String nombre;
-	private String IP;
-	private String MAC;
+	private String nombre = "";
+	private String IP  = "";
+	private String MAC = "";
 	private double x = 0.0;
 	private double y = 0.0;
-	private String multimedia;
+	private String multimedia = "";
+    private String IPreceptor = "";
+	private Grafo<ID> grafo = new Grafo<>();
+	private LinkedList<ID> ids = new LinkedList<>();
 	
+	
+
+	public Grafo<ID> getGrafo() {
+		return grafo;
+	}
+	public void setGrafo(Grafo<ID> grafo) {
+		this.grafo = grafo;
+	}
+	public LinkedList<ID> getIds() {
+		return ids;
+	}
+	public void setIds(LinkedList<ID> ids) {
+		this.ids = ids;
+	}
 	public String getNombre() {
 		return nombre;
 	}
@@ -39,9 +61,15 @@ public class Codigo {
 	public void setY(double y) {
 		this.y = y;
 	}
+	public String getIPReceptor() {
+        return IPreceptor;
+	}
+	public void setIPReceptor(String receptor) {
+		this.IPreceptor = receptor;
+	}
 	public String getMultimedia() {
 		
-		if(this.multimedia != null){
+		if(this.multimedia != ""){
 		
 			String[] contenido = this.multimedia.split(" ");
 			
@@ -60,6 +88,9 @@ public class Codigo {
 	
 		return multimedia;
 	}
+    public String[] getMultimediaFrag() {
+        return this.multimedia.split(" ");
+    }
 	public void setMultimedia(String multimedia) {
 		this.multimedia = multimedia;
 	}

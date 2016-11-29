@@ -7,8 +7,10 @@ import com.ce.datosi.GraphMessage.Herramientas.Codigo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -56,6 +58,31 @@ public class EnvioDatos extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
         out.println(datosAEnviar);
+
+        BufferedReader input = null;
+        String respuesta = null;
+        try {
+            input = new BufferedReader(new InputStreamReader(Comunicador.Serversocket.getInputStream()));
+            respuesta = input.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Codigo info = gson.fromJson(respuesta, Codigo.class);
+
+        if(info.getGrafo() != null){
+            Comunicador.setGrafoUsuarios(info.getGrafo());
+        }
+        if(info.getIds() != null){
+            try {
+                Comunicador.setClientes(info.getIds());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
 
         return null;
     }
